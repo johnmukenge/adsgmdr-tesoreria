@@ -15,6 +15,17 @@ const checkID = (req, res, next, val) => {
     }
     next();
 };
+
+const checkBody = (req, res, next) => {
+    console.log(req.body);
+    if(!req.body.nome || !req.body.ricevuta.importoTotale) {
+        return res.status(400).json({
+            status: 'fail',
+            message: 'Manca il nome o l\'importo totale della ricevuta',
+        });
+    }
+    next();
+};
 const getAllEntrate = (req, res) => {
     console.log(req.requestTime);
     res.status(200).json({
@@ -44,6 +55,8 @@ const createEntrata = (req, res) => {
     // retrieve the last entry and increment the number of the receipt
     const lastRicevuta = entrate[entrate.length - 1].ricevuta;
     const numeroRicevuta = lastRicevuta.numeroRicevuta.substring(0,3) + newId;
+    // calcola importo totale entrate come la somma di tutte le voci della ricevuta
+    
     // create a new ricevuta object with updated numeroRicevuta
     const newRicevuta = { ...lastRicevuta, numeroRicevuta: numeroRicevuta };
     const newEntrata = { ...req.body, id: newId,ricevuta: newRicevuta };
@@ -80,5 +93,6 @@ module.exports = {
     createEntrata,
     updateEntrata,
     deleteEntrata,
-    checkID
+    checkID, 
+    checkBody
 };
