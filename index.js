@@ -42,6 +42,25 @@ app.post('/api/v1/entrate', (req, res) => {
     });
 });
 
+app.get('/api/v1/entrate/:id', (req, res) => {
+    console.log(req.params);
+    const id = req.params.id * 1;
+    if(id > entrate.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Non ci sono entrate con questo ID',
+        });
+    }
+    // loop through all the entrate and find the one with the id that matches the one in the request
+    const entrata = entrate.find(el => el.id === id); // * 1 converts the string to a number
+    res.status(200).json({
+        status: 'success',
+        data: {
+            entrata,
+        },
+    });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
