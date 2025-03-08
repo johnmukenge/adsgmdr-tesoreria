@@ -6,14 +6,26 @@ const port = 3000;
 // middleware for parsing the body of the request
 app.use(express.json());
 
+app.use((req, res, next) => {
+    console.log('Hello from the middleware');
+    next(); // call the next middleware to avoid the request to hang up the middleware stack
+});
+
+app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString();
+    next();
+});
+
 const entrate = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/entrate.json`)
 );
 
 const getAllEntrate = (req, res) => {
+    console.log(req.requestTime);
     res.status(200).json({
         status: 'success',
         results: entrate.length,
+        requestedAt: req.requestTime,
         data: {
             entrate: entrate,
         }
