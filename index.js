@@ -61,6 +61,21 @@ app.get('/api/v1/entrate/:id', (req, res) => {
     });
 });
 
+app.patch('/api/v1/entrate/:id', (req, res) => {
+    if(req.params.id * 1 > entrate.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Non ci sono entrate con questo ID',
+        });
+    }
+    res.status(200).json({
+        status: 'success',
+        data: {
+            entrata: '<Aggiorna entrate qui...>',
+        },
+    });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
