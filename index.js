@@ -10,7 +10,7 @@ const entrate = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/entrate.json`)
 );
 
-app.get('/api/v1/entrate', (req, res) => {
+const getAllEntrate = (req, res) => {
     res.status(200).json({
         status: 'success',
         results: entrate.length,
@@ -18,9 +18,28 @@ app.get('/api/v1/entrate', (req, res) => {
             entrate: entrate,
         }
     });
-});
+};
 
-app.post('/api/v1/entrate', (req, res) => {
+const getEntrata = (req, res) => {
+    console.log(req.params);
+    const id = req.params.id * 1;
+    if(id > entrate.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Non ci sono entrate con questo ID',
+        });
+    }
+    // loop through all the entrate and find the one with the id that matches the one in the request
+    const entrata = entrate.find(el => el.id === id); // * 1 converts the string to a number
+    res.status(200).json({
+        status: 'success',
+        data: {
+            entrata,
+        },
+    });
+};
+
+const createEntrata = (req, res) => {
     //console.log(req.body);
     const newId = entrate[entrate.length - 1].id + 1;
     // retrieve the last entry and increment the number of the receipt
@@ -40,28 +59,9 @@ app.post('/api/v1/entrate', (req, res) => {
             },
         });
     });
-});
+};
 
-app.get('/api/v1/entrate/:id', (req, res) => {
-    console.log(req.params);
-    const id = req.params.id * 1;
-    if(id > entrate.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Non ci sono entrate con questo ID',
-        });
-    }
-    // loop through all the entrate and find the one with the id that matches the one in the request
-    const entrata = entrate.find(el => el.id === id); // * 1 converts the string to a number
-    res.status(200).json({
-        status: 'success',
-        data: {
-            entrata,
-        },
-    });
-});
-
-app.patch('/api/v1/entrate/:id', (req, res) => {
+const updateEntrata = (req, res) => {
     if(req.params.id * 1 > entrate.length) {
         return res.status(404).json({
             status: 'fail',
@@ -74,8 +74,9 @@ app.patch('/api/v1/entrate/:id', (req, res) => {
             entrata: '<Aggiorna entrate qui...>',
         },
     });
-});
-app.delete('/api/v1/entrate/:id', (req, res) => {
+};
+
+const deleteEntrata = (req, res) => {
     if(req.params.id * 1 > entrate.length) {
         return res.status(404).json({
             status: 'fail',
@@ -86,7 +87,23 @@ app.delete('/api/v1/entrate/:id', (req, res) => {
         status: 'success',
         data: null
     });
-});
+};
+
+
+//app.get('/api/v1/entrate', getAllEntrate);
+//app.post('/api/v1/entrate', createEntrata);
+//app.get('/api/v1/entrate/:id', getEntrata);
+//app.patch('/api/v1/entrate/:id', updateEntrata);
+//app.delete('/api/v1/entrate/:id', deleteEntrata);
+
+app.route('/api/v1/entrate')
+    .get(getAllEntrate)
+    .post(createEntrata);
+
+app.route('/api/v1/entrate/:id')
+    .get(getEntrata)
+    .patch(updateEntrata)
+    .delete(deleteEntrata);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
