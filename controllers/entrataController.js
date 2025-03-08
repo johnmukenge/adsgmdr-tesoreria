@@ -3,6 +3,18 @@ const fs = require('fs');
 const entrate = JSON.parse(
     fs.readFileSync(`${__dirname}/../dev-data/data/entrate.json`)
 );
+
+// Middleware to check if the id is valid
+const checkID = (req, res, next, val) => {
+    console.log(`Entrata id is: ${val}`);
+    if(req.params.id * 1 > entrate.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Non ci sono entrate con questo ID',
+        });
+    }
+    next();
+};
 const getAllEntrate = (req, res) => {
     console.log(req.requestTime);
     res.status(200).json({
@@ -17,12 +29,6 @@ const getAllEntrate = (req, res) => {
 const getEntrata = (req, res) => {
     console.log(req.params);
     const id = req.params.id * 1;
-    if(id > entrate.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Non ci sono entrate con questo ID',
-        });
-    }
     // loop through all the entrate and find the one with the id that matches the one in the request
     const entrata = entrate.find(el => el.id === id); // * 1 converts the string to a number
     res.status(200).json({
@@ -54,12 +60,6 @@ const createEntrata = (req, res) => {
     });
 };
 const updateEntrata = (req, res) => {
-    if(req.params.id * 1 > entrate.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Non ci sono entrate con questo ID',
-        });
-    }
     res.status(200).json({
         status: 'success',
         data: {
@@ -68,12 +68,6 @@ const updateEntrata = (req, res) => {
     });
 };
 const deleteEntrata = (req, res) => {
-    if(req.params.id * 1 > entrate.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Non ci sono entrate con questo ID',
-        });
-    }
     res.status(204).json({
         status: 'success',
         data: null
@@ -86,4 +80,5 @@ module.exports = {
     createEntrata,
     updateEntrata,
     deleteEntrata,
+    checkID
 };

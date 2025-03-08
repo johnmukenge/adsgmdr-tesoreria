@@ -1,10 +1,19 @@
 
 const express = require('express');
-const {getAllEntrate, createEntrata, getEntrata, updateEntrata, deleteEntrata} = require('../controllers/entrataController');
+
+const {
+    getAllEntrate, 
+    createEntrata, 
+    getEntrata, 
+    updateEntrata, 
+    deleteEntrata, 
+    checkID
+} = require('../controllers/entrataController');
 
 
 const entrateRouter = express.Router();
 
+entrateRouter.param('id', checkID);
 entrateRouter.route('/')
     .get(getAllEntrate)
     .post(createEntrata);
