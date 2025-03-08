@@ -75,6 +75,18 @@ app.patch('/api/v1/entrate/:id', (req, res) => {
         },
     });
 });
+app.delete('/api/v1/entrate/:id', (req, res) => {
+    if(req.params.id * 1 > entrate.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'Non ci sono entrate con questo ID',
+        });
+    }
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
