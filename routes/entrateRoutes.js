@@ -6,15 +6,13 @@ const {
     createEntrata, 
     getEntrata, 
     updateEntrata, 
-    deleteEntrata, 
-    checkID, 
-    checkBody
+    deleteEntrata,
 } = require('../controllers/entrataController');
 
 
 const entrateRouter = express.Router();
 
-entrateRouter.param('id', checkID);
+//entrateRouter.param('id', checkID);
 
 // Create a checkBody middleware
 // Check if the body contains the name and price property
@@ -22,7 +20,7 @@ entrateRouter.param('id', checkID);
 // Add it to the post handler stack
 entrateRouter.route('/')
     .get(getAllEntrate)
-    .post(checkBody, createEntrata);
+    .post(createEntrata);
 
 entrateRouter.route('/:id')
     .get(getEntrata)
