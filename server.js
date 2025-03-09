@@ -22,6 +22,10 @@ const entrateSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Il nome è obbligatorio']
   },
+  descrizione: {
+    type: String,
+    required: [true, 'La descrizione è obbligatorio']
+  },
   importoTotale: {
     type: Number,
     required: [true, 'è importante avere l\'importo totale']
@@ -30,6 +34,18 @@ const entrateSchema = new mongoose.Schema({
 
 // Creating a new Model Entrate
 const Entrate = mongoose.model('Entrate', entrateSchema);
+
+const testEntrate = new Entrate({
+  nome: 'John Mukenge',
+  "descrizione": "Decima",
+  importoTotale: 2000
+});
+
+testEntrate.save().then(doc => {
+  console.log(doc);
+}).catch(err => {
+  console.log('Error:', err);
+});
 
 const port = process.env.PORT || 3000; // use environment variable PORT or default 3000
 app.listen(port, () => {
