@@ -6,9 +6,8 @@ const entrateSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Il nome è obbligatorio']
   },
-  descrizione: {
+  data: {
     type: String,
-    required: [true, 'La descrizione è obbligatorio']
   },
   importoTotale: {
     type: Number,

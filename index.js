@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const entrateRouter = require('./routes/entrateRoutes');
 const usciteRouter = require('./routes/usciteRoutes');
 const usersRouter = require('./routes/usersRoutes');
+const cassaRouter = require('./routes/cassaRoute');
 const app = express();
 
 // 1) MIDDLEWARES
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1/entrate', entrateRouter);
+app.use('/api/v1/casse', cassaRouter);
 app.use('/api/v1/uscite', usciteRouter);
 app.use('/api/v1/users', usersRouter);
 

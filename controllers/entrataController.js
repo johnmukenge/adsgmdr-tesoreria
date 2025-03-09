@@ -23,13 +23,21 @@ const getEntrata = (req, res) => {
         },
     });*/
 };
-const createEntrata = (req, res) => {
-    res.status(201).json({
+const createEntrata = async (req, res) => {
+    try {
+        const newEntrata = await Entrata.create(req.body);
+        res.status(201).json({
             status: 'success',
-            /*data: {
+            data: {
                 entrate: newEntrata,
-            },*/
+            },
         });
+    } catch (error) {
+        res.status(400).json({
+            status: 'fail',
+            message: error,
+        });
+    }
 };
 const updateEntrata = (req, res) => {
     res.status(200).json({
