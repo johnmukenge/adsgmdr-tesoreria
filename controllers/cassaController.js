@@ -32,6 +32,15 @@ const getAllCasse = async (req, res) => {
         } else {
             query = query.sort('-createdAt');
         }
+
+        // 3. Fiels limiting
+        // /api/v1/casse?fields=nome,tipoPagamento,importo
+        if(req.query.fields) {
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        } else {
+            query = query.select('-__v');
+        }
         // Execute the query
         const casse = await query;
 
