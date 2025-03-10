@@ -1,5 +1,12 @@
 const Cassa = require('./../models/cassaModel');
 
+const aliasTopCasse = (req, res, next) => {
+    req.query.limit = '5';
+    req.query.sort = '-importo';
+    req.query.fields = 'nome,tipoPagamento,importo';
+    next();
+}
+
 const getAllCasse = async (req, res) => {
     console.log(req.requestTime);
     try {
@@ -148,4 +155,5 @@ module.exports = {
     createCassa,
     updateCassa,
     deleteCassa,
+    aliasTopCasse,
 };

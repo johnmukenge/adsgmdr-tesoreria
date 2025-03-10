@@ -6,10 +6,15 @@ const {
     getCassa, 
     updateCassa, 
     deleteCassa,
+    aliasTopCasse
 } = require('../controllers/cassaController');
 
 
 const cassaRouter = express.Router();
+
+// middleware to manipulate the query object
+cassaRouter.route('/top-casse')
+    .get(aliasTopCasse, getAllCasse);
 
 cassaRouter.route('/')
     .get(getAllCasse)
