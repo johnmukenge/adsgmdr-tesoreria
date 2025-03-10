@@ -5,14 +5,14 @@ const getAllCasse = async (req, res) => {
     try {
         console.log(req.query);
         // Build the query
-        // 1. Filtering
+        // 1.A Filtering
         const queryObj = { ...req.query };
             // Fields to exclude from the queryObj
         const excludeFields = ['page', 'sort', 'limit', 'fields'];
             // remove the fields from the queryObj
         excludeFields.forEach(el => delete queryObj[el]);
 
-        // 2. Advanced filtering
+        // 1.B Advanced filtering
         let queryStr = JSON.stringify(queryObj);
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
         console.log(JSON.parse(queryStr));
@@ -20,7 +20,18 @@ const getAllCasse = async (req, res) => {
         // exact query: { tipoTesoreria: 'centrale', importo: { $gte: 1000 } }
         // coming from api { tipoTesoreria: 'centrale', percentuale: { gte: '15' } }
 
-        const query = Cassa.find(JSON.parse(queryStr));
+        let query = Cassa.find(JSON.parse(queryStr));
+
+        // 2. Sorting
+        // descending order: /api/v1/casse?sort=-data
+        // ascending order: /api/v1/casse?sort=data
+        // multiple sorting: /api/v1/casse?sort=data,importo
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        } else {
+            query = query.sort('-createdAt');
+        }
         // Execute the query
         const casse = await query;
 
