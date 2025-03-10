@@ -1,14 +1,14 @@
-const Cassa = require('./../models/cassaModel');
+const Ricevuta = require('../models/ricevutaModel');
 
-const getAllCasse = async (req, res) => {
+const getAllRicevute = async (req, res) => {
     console.log(req.requestTime);
     try {
-        const casse = await Cassa.find();
+        const ricevute = await Ricevuta.find();
         res.status(200).json({
             status: 'success',
-            results: casse.length,
+            results: ricevute.length,
             data: {
-                casse,
+                ricevute,
             },
         });
     } catch (error) {
@@ -18,14 +18,15 @@ const getAllCasse = async (req, res) => {
         });
     }
 };
-const getCassa = async (req, res) => {
+const getRicevuta = async (req, res) => {
+    console.log(req.requestTime);
     try {
-        const cassa = await Cassa.findById(req.params.id);
-        // Cassa.findOne({ _id: req.params.id })
+        const ricevuta = await Ricevuta.findById(req.params.id);
+        // Ricevuta.findOne({ _id: req.params.id })
         res.status(200).json({
             status: 'success',
             data: {
-                cassa,
+                ricevuta,
             },
         });
     } catch (error) {
@@ -35,25 +36,26 @@ const getCassa = async (req, res) => {
         });
     }
 };
-const createCassa = async (req, res) => {
+const createRicevuta = async (req, res) => {
     try {
-        const newCassa = await Cassa.create(req.body);
+        const newRicevuta = await Ricevuta.create(req.body);
         res.status(201).json({
             status: 'success',
             data: {
-                cassa: newCassa,
+                ricevuta: newRicevuta,
             },
         });
     } catch (error) {
+        console.error('Errore durante la creazione della ricevuta:', error);
         res.status(400).json({
             status: 'fail',
-            message: 'Invalid data received',
+            message: error.message,
         });
     }
 };
-const updateCassa = async (req, res) => {
+const updateRicevuta = async (req, res) => {
     try {
-        const cassa = await Cassa
+        const ricevuta = await Ricevuta
             .findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
                 runValidators: true,
@@ -61,7 +63,7 @@ const updateCassa = async (req, res) => {
         res.status(200).json({
             status: 'success',
             data: {
-                cassa,
+                ricevuta,
             },
         });
     }
@@ -71,11 +73,10 @@ const updateCassa = async (req, res) => {
             message: error,
         });
     }
-    
 };
-const deleteCassa = async (req, res) => {
+const deleteRicevuta = async (req, res) => {
     try {
-        await Cassa.findByIdAndDelete(req.params.id);
+        await Ricevuta.findByIdAndDelete(req.params.id);
         res.status(204).json({
             status: 'success',
             data: null,
@@ -89,9 +90,9 @@ const deleteCassa = async (req, res) => {
 };
 
 module.exports = {
-    getAllCasse,
-    getCassa,
-    createCassa,
-    updateCassa,
-    deleteCassa,
+    getAllRicevute,
+    getRicevuta,
+    createRicevuta,
+    updateRicevuta,
+    deleteRicevuta,
 };
