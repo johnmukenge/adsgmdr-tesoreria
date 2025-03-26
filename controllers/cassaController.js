@@ -103,6 +103,45 @@ const deleteCassa = async (req, res) => {
     }
 };
 
+const getCasseStats = async (req, res) => {
+    try {
+        const stats = await Cassa.aggregate([
+            {
+                // matsh is a pipeline used to filter the data
+                // in this case we are filtering the data where the importo is greater than 100
+                $match: { importo: { $gte: 100 } },
+            },
+            {
+                // group is a pipeline used to group the data
+                // in this case we are grouping the data by null
+                $group: {
+                    _id: null,
+                    // $sum is an accumulator operator used to sum the data
+                    numCasse: { $sum: 1 },
+                    // $avg is an accumulator operator used to calculate the average of the data
+                    avgCasse: { $avg: '$importo' },
+                    // $min is an accumulator operator used to calculate the minimum of the data
+                    minCasse: { $min: '$importo' },
+                    // $max is an accumulator operator used to calculate the maximum of the data
+                    maxCasse: { $max: '$importo' },
+                },
+            },
+        ]);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                stats,
+            },
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(404).json({
+            status: 'fail',
+            message: error,
+        });
+    }
+}
+
 module.exports = {
     getAllCasse,
     getCassa,
@@ -110,4 +149,5 @@ module.exports = {
     updateCassa,
     deleteCassa,
     aliasTopCasse,
+    getCasseStats,
 };

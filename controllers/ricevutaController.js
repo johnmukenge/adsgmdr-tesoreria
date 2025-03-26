@@ -89,10 +89,44 @@ const deleteRicevuta = async (req, res) => {
     }
 };
 
+const ricevuteStats = async (req, res) => {
+    try {
+        const stats = await Ricevuta.aggregate([
+            {
+                $match: { importoTotale: { $gte: 1500 } },
+            },
+            {
+                $group: {
+                    _id: null,
+                    numRicevute: { $sum: 1 },
+                    numImportoTotale: { $sum: 1 },
+                    avgImportoTotale: { $avg: '$importoTotale' },
+                    minImportoTotale: { $min: '$importoTotale' },
+                    maxImportoTotale: { $max: '$importoTotale' },
+                },
+                //$sort: { avgImportoTotale: 1 },
+            },
+        ]);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                stats,
+            },
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(404).json({
+            status: 'fail',
+            message: error,
+        });
+    }
+}
+
 module.exports = {
     getAllRicevute,
     getRicevuta,
     createRicevuta,
     updateRicevuta,
     deleteRicevuta,
+    ricevuteStats,
 };
